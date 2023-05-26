@@ -1,5 +1,6 @@
 var Product=require("../model/product")
 var Shop=require("../model/shop")
+var Shipping=require("../model/shipping")
 const {ObjectId} =require ('mongodb');
 
 exports.addProduct=(req,res)=>{
@@ -27,7 +28,7 @@ exports.getProductByShopId=(req,res)=>{
     })
 }
 exports.getProductByCategory=(req,res)=>{
-    Product.find({category:ObjectId(req.body.categoryid)}).populate("category").populate("subcategory").exec().then((product)=>{
+    Product.find({category:new ObjectId(req.body.categoryid)}).populate("category").populate("subcategory").exec().then((product)=>{
         if(!product)
         return res.status(404).json({msg:"Error in fetching products"})
         else if(product)
@@ -35,7 +36,7 @@ exports.getProductByCategory=(req,res)=>{
     })
 }
 exports.getProductBySubCategory=(req,res)=>{
-    Product.find({subcategory:ObjectId(req.body.subcategoryid)}).populate("category").populate("subcategory").exec().then((product)=>{
+    Product.find({subcategory:new ObjectId(req.body.subcategoryid)}).populate("category").populate("subcategory").exec().then((product)=>{
         if(!product)
         return res.status(404).json({msg:"Error in fetching products"})
         else if(product)
@@ -43,7 +44,7 @@ exports.getProductBySubCategory=(req,res)=>{
     })
 }
 exports.getProductById=(req,res)=>{
-    Product.findOne({_id:req.body.productid}).populate("category").populate("subcategory").then((product)=>{
+    Product.findOne({_id:req.body.productid}).populate("category").populate("subcategory").populate("shop").then((product)=>{
       if(product)
         return res.status(201).json(product)
       else
@@ -61,10 +62,68 @@ exports.deleteProductById=(req,res)=>{
     })
 
 }
+exports.getAllProducts=(req,res)=>{
+    Product.find().populate("category").populate("subcategory").populate("shop").then((products)=>{
+     if(products){
+        return res.status(201).json(products)
+
+     }
+     else{
+        return res.status(404).json({msg:"Error in getting products"})
+
+     }
+    })
+}
+//update stock
 exports.updateProductStock=(req,res)=>{
-    Product.updateOne({_id:ObjectId(req.body.productid)},{
+    Product.updateOne({_id:new ObjectId(req.body.productid)},{
         $set:{
             stock:req.body.stock
+        }
+    }).then((updated)=>{
+        if(!updated)
+        return res.status(404).json({msg:"Error in updating data"})
+        else if(updated)
+        return res.status(201).json({msg:"Product price updated"})
+    })
+}
+
+//update price
+
+exports.updateProductPrice=(req,res)=>{
+    Product.updateOne({_id:new ObjectId(req.body.productid)},{
+        $set:{
+            price:req.body.price
+        }
+    }).then((updated)=>{
+        if(!updated)
+        return res.status(404).json({msg:"Error in updating data"})
+        else if(updated)
+        return res.status(201).json({msg:"Product price updated"})
+    })
+}
+
+//update discount
+
+exports.updateProductDiscount=(req,res)=>{
+    Product.updateOne({_id:new ObjectId(req.body.productid)},{
+        $set:{
+            discount_percentage:req.body.discount_percentage
+        }
+    }).then((updated)=>{
+        if(!updated)
+        return res.status(404).json({msg:"Error in updating data"})
+        else if(updated)
+        return res.status(201).json({msg:"Product price updated"})
+    })
+}
+
+//update availability
+
+exports.updateProductAvailability=(req,res)=>{
+    Product.updateOne({_id:new ObjectId(req.body.productid)},{
+        $set:{
+            availability:req.body.availability
         }
     }).then((updated)=>{
         if(!updated)
@@ -103,7 +162,7 @@ exports.getCartByCartid=(req,res)=>{
 }
 
 exports.deleteCartItem=(req,res)=>{
-    Cart.deleteOne({_id:ObjectId(req.body.cartid)}).then((delcart)=>{
+    Cart.deleteOne({_id:new ObjectId(req.body.cartid)}).then((delcart)=>{
         if(!delcart)
         return res.status(404).json({msg:"Error in getting cart data"})
         else if(delcart)
@@ -119,5 +178,24 @@ exports.getShopByUserid=(req,res)=>{
             else{
                 return res.status(201).json(shop)
             }
+    })
+}
+exports.getAllShippingAddress=(req,res)=>{
+    Shipping.find({user:new ObjectId(req.body.user)}).then((shipping)=>{
+        if(shipping)
+        return res.status(201).json(shipping)
+        else
+        return res.status(404).json({"msg":"error"})
+
+
+    })
+}
+exports.addShippingDetails=(req,res)=>{
+    let newAddr=Shipping(req.body)
+    newAddr.save().then((saved)=>{
+        if(saved)
+        return res.status(201).json(saved)
+        else
+        return res.status(404).json({error:"error"})
     })
 }
