@@ -53,6 +53,10 @@ var shopSchema=mongoose.Schema({
     shop_license:{
         type:String,
         required:true
+    },
+    admin_status:{
+        type:String,
+        default:"Pending"
     }
 })
 module.exports=mongoose.model("Shop",shopSchema);

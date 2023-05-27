@@ -10,7 +10,7 @@ var userRoutes=require("./routes/user-routes")
 var categoryRoutes=require("./routes/category-routes")
 var productRoutes=require("./routes/product-routes")
 var orderRoutes=require("./routes/order-routes")
-
+var adminRoutes=require("./routes/admin-routes")
 mongoose.set('strictQuery', true)
 mongoose.connect(process.env.DATABASE,{
   useNewUrlParser: true, 
@@ -26,6 +26,8 @@ app.use('/api',userRoutes)
 app.use('/api',categoryRoutes)
 app.use('/api',productRoutes)
 app.use('/api',orderRoutes)
+app.use('/api',adminRoutes)
+
 
 
 app.listen(port, () => {
