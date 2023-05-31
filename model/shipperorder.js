@@ -6,6 +6,10 @@ var shipperOrder=mongoose.Schema({
         type:ObjectId,
         ref:'Order'
     },
+    product:{
+        type:ObjectId,
+        ref:'product'
+    },
     shipping:{
         type:ObjectId,
         ref:'Shipping'

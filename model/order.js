@@ -11,6 +11,7 @@ var OrderSchema=mongoose.Schema({
     },
     vendorid:{
         type:ObjectId,
+        ref:'User'
     },
     qty:{
         type:Number
@@ -23,7 +24,7 @@ var OrderSchema=mongoose.Schema({
     },
     order_status:{
         type:String,
-        default:"order confirmed"
+        default:"Payment Completed"
     },
     shipping:{
         type:ObjectId,

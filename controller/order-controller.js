@@ -87,7 +87,7 @@ exports.viewOrderByVendorId=(req,res)=>{
     })
 }
 exports.viewOrderById=(req,res)=>{
-    Order.findOne({_id:new ObjectId(req.body.orderid)}).populate("product").populate("user").populate("shipping").exec().then((order)=>{
+    Order.findOne({_id:new ObjectId(req.body.orderid)}).populate("product").populate("user").populate("shipping").populate("vendorid").exec().then((order)=>{
         if(!order)
         return res.status(404).json({msg:"Error in fetching order"})
         if(order){
