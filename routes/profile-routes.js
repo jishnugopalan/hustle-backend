@@ -6,5 +6,7 @@ routes.post('/updatephone',profileController.updatePhone)
 routes.post('/updatepassword',profileController.updatePassword)
 routes.post('/updatesecurity',profileController.updateSecurityQuestion)
 routes.post('/forgotpassword',profileController.forgotPassword)
+routes.post('/getuserbyemail',profileController.getUserByEmail)
+routes.post('/updatenewpassword',profileController.updateNewPassword)
 
 module.exports = routes

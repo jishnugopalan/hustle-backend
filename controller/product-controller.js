@@ -53,6 +53,50 @@ exports.getProductById=(req,res)=>{
 
     })
 }
+exports.getProductByCity=(req,res)=>{
+    // var p=[]
+     console.log(req.body)
+    // Product.find({subcategory:new ObjectId(req.body.subcategoryid)}).populate("category").populate("subcategory").populate("shop").exec().then((product)=>{
+    //     if(!product)
+    //     return res.status(404).json({msg:"Error in fetching products"})
+    //     else {
+            
+    //         console.log(typeof(req.body.city))
+    //         for(let i=0;i<product.length;i++){
+    //            console.log(typeof(product[i].shop.shop_city))
+    //             console.log(String(product[i].shop.shop_city)===String(req.body.city))
+              
+    //         }
+            
+    //         return res.status(201).json(p)
+    //     }
+    // })
+
+    Product.aggregate([
+        {
+            $lookup: {
+              from: "shops",
+              localField: "shop",
+              foreignField: "_id",
+              as: "shopdetails"
+            }
+        },
+        {
+            $unwind: "$shopdetails"
+        },
+        {
+            $match: {
+              "shopdetails.shop_city": req.body.city,
+              subcategory:new ObjectId(req.body.subcategoryid)
+            }
+        }
+    ]).exec().then((product)=>{
+        if(product)
+        return res.status(201).json(product)
+        else
+        return res.status(404).json({msg:"not found"})
+    })
+}
 exports.deleteProductById=(req,res)=>{
     Product.deleteOne({_id:ObjectId(req.body.productid)}).then((delproduct)=>{
         if(!delproduct)
@@ -121,6 +165,7 @@ exports.updateProductDiscount=(req,res)=>{
 //update availability
 
 exports.updateProductAvailability=(req,res)=>{
+    console.log(req.body)
     Product.updateOne({_id:new ObjectId(req.body.productid)},{
         $set:{
             availability:req.body.availability
@@ -129,7 +174,7 @@ exports.updateProductAvailability=(req,res)=>{
         if(!updated)
         return res.status(404).json({msg:"Error in updating data"})
         else if(updated)
-        return res.status(201).json({msg:"Product price updated"})
+        return res.status(201).json({msg:"Product availabilty updated"})
     })
 }
 

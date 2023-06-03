@@ -8,7 +8,7 @@ routes.post('/getproductbysubcategory',productController.getProductBySubCategory
 routes.post('/getproductbyshopid',productController.getProductByShopId)
 routes.post('/getproductbyid',productController.getProductById)
 routes.post('/deleteproductbyid',productController.deleteProductById)
-
+routes.post('/getproductbycity',productController.getProductByCity)
 //updations
 routes.post('/updateproductprice',productController.updateProductPrice)
 routes.post('/updateproductstock',productController.updateProductStock)
