@@ -13,6 +13,7 @@ var orderRoutes=require("./routes/order-routes")
 var adminRoutes=require("./routes/admin-routes")
 var shipperRoutes=require("./routes/shipper-routes")
 var profileRoutes=require("./routes/profile-routes")
+
 mongoose.set('strictQuery', true)
 mongoose.connect(process.env.DATABASE,{
   useNewUrlParser: true, 

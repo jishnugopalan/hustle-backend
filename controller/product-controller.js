@@ -2,6 +2,7 @@ var Product=require("../model/product")
 var Shop=require("../model/shop")
 var Shipping=require("../model/shipping")
 const {ObjectId} =require ('mongodb');
+var Cart=require("../model/cart")
 
 exports.addProduct=(req,res)=>{
     console.log(req.body)
@@ -178,6 +179,9 @@ exports.updateProductAvailability=(req,res)=>{
     })
 }
 
+
+//cart
+
 exports.addToCart=(req,res)=>{
     let newCart=Cart(req.body)
     newCart.save().then((cart)=>{
@@ -190,7 +194,7 @@ exports.addToCart=(req,res)=>{
 
 exports.getCartByUserid=(req,res)=>{
     console.log(req.body)
-    Cart.find({user:ObjectId(req.body.userid)}).populate("product").populate("user").exec().then((cart)=>{
+    Cart.find({user:new ObjectId(req.body.userid)}).populate("product").populate("user").exec().then((cart)=>{
         if(!cart)
         return res.status(404).json({msg:"Error in getting cart data"})
         else if(cart)
@@ -215,6 +219,9 @@ exports.deleteCartItem=(req,res)=>{
 
     })
 }
+
+
+
 exports.getShopByUserid=(req,res)=>{
     Shop.findOne({user:new ObjectId(req.body.userid)}).exec().then((shop)=>{
         if(!shop){
